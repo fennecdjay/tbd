@@ -1,0 +1,3 @@
+[submodule "subprojects/munit/munit"]
+	path = subprojects/munit/munit
+	url = https://github.com/nemequ/munit.git

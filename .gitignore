@@ -1,0 +1,9 @@
+# Build directories
+/build/
+/builddir/
+
+# Editor generated files
+.vscode/
+*.swp
+*~
+.cache/

@@ -1,0 +1,5 @@
+# Perform line ending normalisation
+* text=auto
+
+# Mark .h files as C, not C++
+*.h linguist-language=C

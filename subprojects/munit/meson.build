@@ -1,0 +1,1 @@
+project('munit', 'c')
