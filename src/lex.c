@@ -133,20 +133,26 @@ at_eof(void)
     return lexer.index == lexer.file->size;
 }
 
-static char peek(void);
+static bool peek(char *c);
 
 static bool
 at_eol(void)
 {
-    return at_eof() || peek() == '\n';
+    char c;
+    return at_eof() || (peek(&c) && c == '\n');
 }
 
-static char
-peek(void)
+static bool
+peek(char *c)
 {
-    $assert_false(at_eof());
+    $assert_nonnull(c);
 
-    return lexer.file->data[lexer.index];
+    const bool not_eof = !at_eof();
+
+    if (not_eof)
+        *c = lexer.file->data[lexer.index];
+
+    return not_eof;
 }
 
 static char
@@ -184,7 +190,8 @@ scan_keyword_or_ident(void)
 {
     const size_t start = lexer.index;
 
-    while (!at_eof() && is_ident_cont(peek()))
+    char c;
+    while (!at_eof() && peek(&c) && is_ident_cont(c))
         consume();
 
     const size_t end = lexer.index;
@@ -213,6 +220,7 @@ scan_token(struct Tokens *const tokens)
     const size_t start_index = lexer.index;
     const char c = consume();
     enum TokenType type;
+    char c2;
 
     switch (c)
     {
@@ -225,7 +233,7 @@ scan_token(struct Tokens *const tokens)
 
         /* Single or double character tokens */
         case ':':
-            if (peek() == ':')
+            if (peek(&c2) && c2 == ':')
             {
                 type = TOKEN_COLONCOLON;
                 consume();
@@ -237,7 +245,7 @@ scan_token(struct Tokens *const tokens)
             break;
 
         case '-':
-            if (peek() == '>')
+            if (peek(&c2) && c2 == '>')
             {
                 type = TOKEN_ARROW;
                 consume();
