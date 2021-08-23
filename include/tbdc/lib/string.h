@@ -4,6 +4,9 @@
 #include <stdbool.h>
 #include <stddef.h>
 
+#define SV_FMT "%.*s"
+#define SV_ARG(v) v.size, v.str
+
 struct string_view
 {
     size_t size;
