@@ -98,7 +98,7 @@ void source_error(const char *file,
     log_noneln("%*.s${magenta}%s${reset}", loc->start - 1, "", column_char());
 
     log_pad("%*.s %s ", line_len, "", column_char());
-    log_none("%*.s${magenta}%s${reset} ", loc->start - 1, "", left_corner_char());
+    log_none("%*.s${magenta}%s${reset}  ", loc->start - 1, "", left_corner_char());
 
     va_list args;
     va_start(args, fmt);
