@@ -19,22 +19,10 @@ If Meson is not available on your systems repositories, you can find a guide on 
 ## Building
 
 Run this command to setup Meson:  
-`$ meson setup build`
+`$ meson setup builddir/`
 
 If your version of Meson is newer than 0.55.0, you can run this:  
-`$ meson compile`
+`$ meson compile -C builddir/`
 
 Otherwise, run this:  
-`$ ninja -C build/`
-
-## TODO
-
-* Apply const, restrict wherever sensible
-* internal_XXX for internal functions
-* XXX_new for constructors
-* XXX_delete for destructors
-* first parameter should be `self`
-* Improve macro hygiene with temp vars
-* Proper Unicode and UTF-8 support
-* Only use term colours if std{out,err} is a terminal and supports them
-* Debug/release builds
+`$ ninja -C builddir/`

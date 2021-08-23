@@ -1,43 +1,31 @@
-#include <unistd.h>
+#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "lib/assertions.h"
-#include "lex.h"
-#include "lib/error.h"
+#include <tbdc/core/compile.h>
+#include <tbdc/lib/opts.h>
 
-static int
-compile(const size_t count, const char *infile[count])
+int main(int argc, const char *argv[])
 {
-    $assert_ne(count, 0);
-    $assert_nonnull(infile);
+    const struct opts *opts = parse_opts(argc, argv);
+    if (opts == NULL)
+        return EXIT_FAILURE;
 
-    for (size_t i = 0; i < count; i++) // TODO: Spawn min(count, nproc) threads to parallelise compilation
+    switch (opts->cmd)
     {
-        lexer_new(infile[i]);
+        case OPT_COMPILE:
+            compile(opts);
+            break;
 
-        struct Tokens tokens;
-        tokens_new(&tokens);
+        case OPT_HELP:
+            // usage();
+            break;
 
-        if (lex(&tokens) == EXIT_FAILURE)
-        {
-            log_fatal("Failed to compile input file '%s'.", infile[i]);
-        }
-
-        tokens_dump(&tokens);
-
-        tokens_destroy(&tokens);
-        lexer_destroy();
+        case OPT_OTHER: /* FALLTHROUGH */
+        default:
+            // usage();
+            break; // TODO: Handle error here
     }
 
     return EXIT_SUCCESS;
-}
-
-int
-main(int argc, char *argv[argc + 1])
-{
-    argv++;
-    argc--;
-
-    return compile(argc, (const char **)argv);
 }

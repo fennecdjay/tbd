@@ -1,31 +1,16 @@
 project('tbd', 'c',
+	license : 'MIT',
+    version: '0.1.0',
+	meson_version : '>=0.55.0',
     default_options : [
         'c_std=c99',
         'b_sanitize=address,undefined',
-        'werror=false',
+        'werror=true',
         'warning_level=3'
     ]
 )
 
-# -Db_fsanitize=address,undefined
-# -Db_coverage=true
-
-munit = subproject('munit')
-
-srcs = [
-    'src/lex.c',
-    'src/main.c',
-    'src/parse.c',
-    'src/source_error.c',
-    'src/tokens.c',
-
-    'src/lib/cmdline.c',
-    'src/lib/error.c',
-    'src/lib/hashtable.c',
-    'src/lib/string.c',
-    'src/lib/xmalloc.c',
-    'src/lib/term.c'
-]
+subdir('src')
 
 includes = include_directories('include')
 
