@@ -20,8 +20,6 @@ enum token_type
     TOKEN_LPAREN,
     TOKEN_RPAREN,
     TOKEN_MINUS,
-    TOKEN_ARROW,
-    TOKEN_ADD,
 
     TOKEN_PLUS,
 

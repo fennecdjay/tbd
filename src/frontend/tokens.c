@@ -48,8 +48,6 @@ static const char *stringify_type(const enum token_type type)
         ADD_CASE(TOKEN_LPAREN)
         ADD_CASE(TOKEN_RPAREN)
         ADD_CASE(TOKEN_MINUS)
-        ADD_CASE(TOKEN_ARROW)
-        ADD_CASE(TOKEN_ADD)
 
         ADD_CASE(TOKEN_PLUS)
 

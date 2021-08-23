@@ -170,7 +170,6 @@ enum lexer_status scan_token(struct compile *ctx)
 
     enum token_type type = TOKEN_EOF;
 
-    size_t scratch_len;
     switch (c)
     {
         /* Single character tokens */
@@ -180,21 +179,12 @@ enum lexer_status scan_token(struct compile *ctx)
         case '}': type = TOKEN_RBRACE;    break;
         case '(': type = TOKEN_LPAREN;    break;
         case ')': type = TOKEN_RPAREN;    break;
-        case '+': type = TOKEN_ADD;       break;
+        case '+': type = TOKEN_PLUS;      break;
         case ':': type = TOKEN_COLON;     break;
+        case '-': type = TOKEN_MINUS;     break;
 
         /* Single or double character tokens */
-        case '-':
-            if (peek_match(ctx, '>'))
-            {
-                type = TOKEN_ARROW;
-                consume(ctx, &scratch_len);
-            }
-            else
-            {
-                type = TOKEN_MINUS;
-            }
-            break;
+            /* None yet. */
 
         /* Match insignificant whitespace */
         case '\t': /* FALLTHROUGH */
@@ -220,16 +210,16 @@ enum lexer_status scan_token(struct compile *ctx)
 
     if (type == TOKEN_UNKNOWN)
     {
-        // struct loc loc = {
-        //     .line = lexer->line,
-        //     .start = start_col,
-        //     .end = lexer->col
-        // };
-        // source_error(ctx->source->file,
-        //              ctx->source->size,
-        //              ctx->source->data,
-        //              &loc,
-        //              "${bold}Unknown token '%c'.", c);
+        struct loc loc = {
+            .line = lexer->line,
+            .start = start_col,
+            .end = lexer->col
+        };
+        source_error(ctx->source->file,
+                     ctx->source->size,
+                     ctx->source->data,
+                     &loc,
+                     "${bold}Unknown token '%c'.", c);
         return LEX_TOK_ERR;
     }
 
@@ -275,9 +265,9 @@ int lex(struct compile *ctx)
     }
 
     struct token tok = {
-        .loc = { .start = 0, .end = 0, .line = 0},
+        .loc = { .start = ctx->lexer->col, .end = ctx->lexer->col, .line = ctx->lexer->line },
         .type = TOKEN_EOF,
-        .lexeme = { .size = 0, .str = NULL }
+        .lexeme = { .size = 3, .str = "EOF" }
     };
     token_push(ctx, &tok);
 
