@@ -1,7 +1,7 @@
 project('tbd', 'c',
-	license : 'MIT',
+    license : 'MIT',
     version: '0.1.0',
-	meson_version : '>=0.55.0',
+    meson_version : '>=0.55.0',
     default_options : [
         'c_std=c99',
         'b_sanitize=address,undefined',
