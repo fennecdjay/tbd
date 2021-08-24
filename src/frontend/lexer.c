@@ -7,6 +7,7 @@
 #include <tbdc/lib/assert.h>
 #include <tbdc/lib/error.h>
 #include <tbdc/lib/log.h>
+#include <tbdc/lib/string.h>
 #include <tbdc/lib/unicode.h>
 #include <tbdc/lib/util.h>
 #include <tbdc/lib/xmalloc.h>
@@ -84,7 +85,10 @@ static unicode_char consume(struct compile *ctx, size_t *len)
     *len = utf8_decode(start, &c, &e);
 
     if (e)
+    {
+        *len = 0;
         c = UNICODE_REPLACEMENT;
+    }
 
     *index += *len;
     ctx->lexer->col++;
@@ -162,6 +166,7 @@ enum lexer_status scan_token(struct compile *ctx)
     const unicode_char c = consume(ctx, &len);
     if (len == 0)
     {
+        /* TODO: Improve this error message */
         struct loc loc = { .start = start_col, .end = lexer->col, .line = lexer->line };
         source_error(ctx->source->file, ctx->source->size, ctx->source->data,
                      &loc, "Invalid UTF-8 byte sequence");
@@ -208,26 +213,23 @@ enum lexer_status scan_token(struct compile *ctx)
             }
     }
 
-    if (type == TOKEN_UNKNOWN)
-    {
-        struct loc loc = {
-            .line = lexer->line,
-            .start = start_col,
-            .end = lexer->col
-        };
-        source_error(ctx->source->file,
-                     ctx->source->size,
-                     ctx->source->data,
-                     &loc,
-                     "${bold}Unknown token '%c'.", c);
-        return LEX_TOK_ERR;
-    }
-
     struct token tok = {
         .loc = { .start = start_col, .end = lexer->col, .line = lexer->line },
         .type = type,
         .lexeme = { .size = lexer->index - start_index, .str = &ctx->source->data[start_index] }
     };
+
+    if (tok.type == TOKEN_UNKNOWN)
+    {
+        /* TODO: Handle grapheme clusters */
+        source_error(ctx->source->file,
+                     ctx->source->size,
+                     ctx->source->data,
+                     &tok.loc,
+                     "${bold}Unknown token '"SV_FMT"'.", SV_ARG(tok.lexeme));
+        return LEX_TOK_ERR;
+    }
+
     token_push(ctx, &tok);
 
     return LEX_OK;
