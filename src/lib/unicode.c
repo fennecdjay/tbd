@@ -16,8 +16,8 @@
  * encoding, or a surrogate half.
  *
  * The function returns the size of the codepoint. When an error
- * occurs, this pointer will be a guess that depends on the particular
- * error, but it will always advance at least one byte.
+ * occurs, the size will be a guess that depends on the particular
+ * error, but it will always be at least one.
  */
 size_t utf8_decode(const char *restrict buf, unicode_char *restrict c, int *restrict e)
 {
@@ -25,10 +25,10 @@ size_t utf8_decode(const char *restrict buf, unicode_char *restrict c, int *rest
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
         0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2, 2, 3, 3, 4, 0
     };
-    static const int masks[]  = {0x00, 0x7f, 0x1f, 0x0f, 0x07};
-    static const unicode_char mins[] = {4194304, 0, 128, 2048, 65536};
-    static const int shiftc[] = {0, 18, 12, 6, 0};
-    static const int shifte[] = {0, 6, 4, 2, 0};
+    static const int masks[]  = { 0x00, 0x7f, 0x1f, 0x0f, 0x07 };
+    static const unicode_char mins[] = { 4194304, 0, 128, 2048, 65536 };
+    static const int shiftc[] = { 0, 18, 12, 6, 0 };
+    static const int shifte[] = { 0, 6, 4, 2, 0 };
 
     const unsigned char *s = (const unsigned char *)buf;
     const size_t len = lengths[s[0] >> 3];
