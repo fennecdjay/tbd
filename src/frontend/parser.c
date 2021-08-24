@@ -1,5 +1,6 @@
 #include <stddef.h>
 #include <tbdc/frontend/parser.h>
+#include <tbdc/lib/assert.h>
 #include <tbdc/lib/error.h>
 #include <tbdc/lib/log.h>
 #include <tbdc/lib/string.h>
@@ -33,9 +34,9 @@ static int parser_error(const struct compile *ctx, const char *expected, const s
  */
 static const struct token *peek(struct compile *ctx)
 {
-    /* `consume()` unconditionally advances the parser so we use '>=' to help prevent misuse */
-    if (ctx->parser->index >= ctx->tokens->size)
-        return &ctx->tokens->token[ctx->tokens->size]; /* This is the EOF token appended by the lexer */
+    /* `consume()` unconditionally advances the parser so we use assert here to check that we never `consume()` after EOF. */
+    assert_le(ctx->parser->index, ctx->tokens->size);
+
     return &ctx->tokens->token[ctx->parser->index];
 }
 
