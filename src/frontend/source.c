@@ -38,15 +38,19 @@ struct source *source_create(const char *file)
     if (size == -1L)
         log_fatal("Failed to get size of file '%s': %s.", file, strerror(errno));
 
-    const long aligned_size = size + 3;
+    /* The size needs to have at most 3 bytes of padding in order for the UTF-8 decoder to work correctly.
+       The padding is silently "forgotten" by the rest of the codebase but as it is still present
+       in the allocation, the UTF-8 decoder is able to read it without invoking UB.*/
+    const long padded_size = size + 3;
 
-    struct source *source = xmalloc(sizeof(*source) + (sizeof(*source->data) * aligned_size));
+    struct source *source = xmalloc(sizeof(*source) + (sizeof(*source->data) * padded_size));
     source->size = size;
 
     if (fread(source->data, size, 1, fp) != 1)
         log_fatal("Failed to read file '%s': %s.", file, strerror(errno));
 
-    memset(&source->data[size], 0, aligned_size - size);
+    /* Zero the padding bytes */
+    memset(&source->data[size], 0, padded_size - size);
 
     fclose(fp);
 
