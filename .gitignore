@@ -10,7 +10,6 @@
 # Temporary
 tests/
 subprojects/
-.github/
 scripts/
 include/tbdc/lib/vector.h
 .clang-format
