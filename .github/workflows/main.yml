@@ -19,7 +19,9 @@ jobs:
 
     - name: dependencies (linux)
       if: ${{ matrix.os  == 'ubuntu-latest' }}
-      run: sudo apt-get install meson
+      run: |
+        sudo apt-get update -y
+        sudo apt-get install meson
     - name: dependencies (macos)
       if: ${{ matrix.os  == 'macos-latest' }}
       run: brew install meson
