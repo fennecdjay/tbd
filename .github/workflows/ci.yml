@@ -3,23 +3,23 @@ name: CI
 on: [push]
 
 jobs:
-    build:
-        name: ${{ matrix.os }} ${{ matrix.cc }}
-        runs-on: ${{ matrix.os }}
-        strategy:
-            matrix:
-                cc: [gcc, clang]
-                os: [ubuntu-latest, windows-latest, macOS-latest]
-                deps: [apt-get install, brew install, chocolatey install]
+  build:
+    name: ${{ matrix.os }} ${{ matrix.cc }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        cc: [gcc, clang]
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+        deps: [apt-get install, brew install, chocolatey install]
 
-    steps:
-    - name: submodules
-      run: git submodule update --init --recursive
-    - name: checkout
-      uses: actions/checkout@v2
-    - name: dependencies
-      run: ${{ matrix.deps }} meson
-    - name: setup
-      run: |
-        meson setup builddir
-        meson compile -C builddir
+  steps:
+  - name: submodules
+    run: git submodule update --init --recursive
+  - name: checkout
+    uses: actions/checkout@v2
+  - name: dependencies
+    run: ${{ matrix.deps }} meson
+  - name: setup
+    run: |
+      meson setup builddir
+      meson compile -C builddir
