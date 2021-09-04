@@ -5,7 +5,7 @@ project('tbd', 'c',
     default_options : [
         'c_std=c99',
         'b_sanitize=address,undefined',
-        'werror=true',
+        'werror=false',
         'warning_level=3'
     ]
 )
