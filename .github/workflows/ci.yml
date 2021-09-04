@@ -14,12 +14,12 @@ jobs:
 
     steps:
         - name: submodules
-            run: git submodule update --init --recursive
+          run: git submodule update --init --recursive
         - name: checkout
-            uses: actions/checkout@v2
+          uses: actions/checkout@v2
         - name: dependencies
-            run: ${{ matrix.deps }} meson
+          run: ${{ matrix.deps }} meson
         - name: setup
-            run:|
-               meson setup builddir
-               meson compile -C builddir
+          run: |
+            meson setup builddir
+            meson compile -C builddir
